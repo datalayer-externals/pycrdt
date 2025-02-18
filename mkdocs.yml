@@ -1,6 +1,6 @@
-site_name: pycrdt
+site_name: datalayer-pycrdt
 site_description: CRDTs based on Yrs
-repo_url: https://github.com/jupyter-server/pycrdt
+repo_url: https://github.com/datalayer-externals/pycrdt
 
 theme:
   name: 'material'

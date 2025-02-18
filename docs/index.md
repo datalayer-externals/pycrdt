@@ -4,5 +4,5 @@ Conflict-free Replicated Data Types (CRDTs) allow creating shared documents that
 
 Pycrdt is an alternative to [Ypy](https://ypy.readthedocs.io/). Their architectures differ in that pycrdt is a mixed Python/Rust project, while Ypy is Rust-only. This probably gives Ypy a performance gain, at the cost of complexity. Pycrdt is more Pythonic and its code base probably easier to understand and maintain. For more information, see the following GitHub issues:
 
-- [Move pycrdt to jupyter-server](https://github.com/jupyter-server/team-compass/issues/55)
+- [Move pycrdt to jupyter-server](https://github.com/datalayer-externals/team-compass/issues/55)
 - [New Python bindings for Yrs](https://github.com/y-crdt/ypy/issues/146)

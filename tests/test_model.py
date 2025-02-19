@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Tuple
 
 import pytest
-from pycrdt import Array, Doc, Text
+from datalayer_pycrdt import Array, Doc, Text
 from pydantic import BaseModel, ValidationError
 
 

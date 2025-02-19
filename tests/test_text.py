@@ -1,5 +1,7 @@
+import re
+
 import pytest
-from pycrdt import Array, Doc, Map, Text
+from datalayer_pycrdt import Array, Doc, Map, Text
 
 hello = "Hello"
 world = ", World"
@@ -161,5 +163,18 @@ def test_observe():
         events.append(event)
 
     sub = text.observe(callback)  # noqa: F841
-    text += hello
-    assert str(events[0]) == """{target: Hello, delta: [{'insert': 'Hello'}], path: []}"""
+    origin = "test-text"
+    with doc.transaction(origin=origin):
+        text += hello
+    event = events[0]
+    assert str(event.target) == hello
+    assert str(event.delta) == f"[{{'insert': '{hello}'}}]"
+    assert event.path == []
+    assert event.transaction.origin == origin
+    assert (
+        re.match(
+            r"{target: Hello, delta: \[{'insert': 'Hello'}\], path: \[\], transaction: <[\w\.]+ object at 0x[a-fA-F\d]+>}",
+            str(event),
+        )
+        is not None
+    ), "Event string representation"

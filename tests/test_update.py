@@ -1,4 +1,4 @@
-from pycrdt import Doc, Map, Text, get_state, get_update, merge_updates
+from datalayer_pycrdt import Doc, Map, Text, get_state, get_update, merge_updates
 
 
 def test_update():

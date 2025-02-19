@@ -38,6 +38,10 @@
 - Drop Python v3.8.
 - Support type annotations.
 
+## 0.10.10
+
+- Add transaction attribute to events.
+
 ## 0.10.9
 
 - Bump `pyo3` to v0.23.3.

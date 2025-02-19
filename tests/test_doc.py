@@ -1,7 +1,7 @@
 from functools import partial
 
 import pytest
-from pycrdt import Array, Doc, Map, Text
+from datalayer_pycrdt import Array, Doc, Map, Text
 
 
 def callback(events, event):

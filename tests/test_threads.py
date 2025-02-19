@@ -2,7 +2,7 @@ import gc
 
 import pytest
 from anyio import CapacityLimiter, to_thread
-from pycrdt import Doc, Text
+from datalayer_pycrdt import Doc, Text
 
 pytestmark = pytest.mark.anyio
 

@@ -4,9 +4,11 @@ on:
   push:
     branches:
     - main
+    - 0.10.x
   pull_request:
     branches:
     - main
+    - 0.10.x
 
 defaults:
   run:
@@ -21,7 +23,6 @@ jobs:
         os: [ubuntu, macos, windows]
         rust-version: [stable]
         python-version:
-          - '3.8'
           - '3.9'
           - '3.10'
           - '3.11'

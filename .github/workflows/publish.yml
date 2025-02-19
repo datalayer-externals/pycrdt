@@ -155,19 +155,15 @@ jobs:
       - windows
       - linux
       - linux-cross
+    environment: release
+    permissions:
+      id-token: write
     steps:
       - uses: actions/download-artifact@v4
         with:
           path: dist
           merge-multiple: true
-      - uses: actions/setup-python@v5
-      - name: Publish to PyPI
-        env:
-          TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
-          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-        run: |
-          pip install --upgrade twine
-          twine upload --skip-existing dist/*
+      - uses: pypa/gh-action-pypi-publish@release/v1
 
   github-release:
     name: Create GitHub release

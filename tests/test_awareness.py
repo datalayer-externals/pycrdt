@@ -4,7 +4,7 @@ from uuid import uuid4
 
 import pytest
 from anyio import create_task_group, sleep
-from pycrdt import Awareness, Doc, Encoder, YMessageType, create_awareness_message, read_message
+from datalayer_pycrdt import Awareness, Doc, Encoder, YMessageType, create_awareness_message, read_message
 
 pytestmark = pytest.mark.anyio
 

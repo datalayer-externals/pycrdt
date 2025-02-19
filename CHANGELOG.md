@@ -1,5 +1,9 @@
 # Version history
 
+## 0.10.10
+
+- Add transaction attribute to events.
+
 ## 0.10.9
 
 - Bump `pyo3` to v0.23.3.

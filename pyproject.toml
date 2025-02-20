@@ -56,7 +56,7 @@ Homepage = "https://github.com/datalayer-externals/pycrdt"
 [tool.maturin]
 features = ["pyo3/extension-module"]
 python-source = "python"
-module-name = "datalayer_pycrdt._pycrdt"
+module-name = "pycrdt._pycrdt"
 
 [tool.ruff]
 line-length = 100

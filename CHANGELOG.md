@@ -1,5 +1,9 @@
 # Version history
 
+## 0.10.11
+
+- Use clobbing to hide pycrdt
+
 ## 0.10.10
 
 - Add transaction attribute to events.

@@ -1,5 +1,5 @@
 import pytest
-from datalayer_pycrdt import Array, Doc, Map, Text, UndoManager
+from pycrdt import Array, Doc, Map, Text, UndoManager
 
 
 def undo_redo(data, undo_manager, val0, val1, val3):

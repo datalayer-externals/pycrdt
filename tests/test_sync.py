@@ -1,14 +1,14 @@
 import pytest
 from anyio import TASK_STATUS_IGNORED, create_memory_object_stream, create_task_group, sleep
 from anyio.abc import TaskStatus
-from datalayer_pycrdt import (
+from pycrdt import (
     Array,
     Doc,
     create_sync_message,
     create_update_message,
     handle_sync_message,
 )
-from datalayer_pycrdt._sync import Decoder, write_var_uint
+from pycrdt._sync import Decoder, write_var_uint
 
 pytestmark = pytest.mark.anyio
 

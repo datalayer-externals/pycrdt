@@ -6,4 +6,3 @@ Cargo.lock
 /site
 /dist
 _pycrdt.*.pyd
-_datalayer_pycrdt.*.pyd

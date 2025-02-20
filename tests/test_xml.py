@@ -1,5 +1,5 @@
 import pytest
-from datalayer_pycrdt import Array, Doc, Map, XmlElement, XmlFragment, XmlText
+from pycrdt import Array, Doc, Map, XmlElement, XmlFragment, XmlText
 
 
 def test_plain_text():

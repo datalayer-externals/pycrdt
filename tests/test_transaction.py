@@ -78,7 +78,7 @@ def test_origin():
     assert origin1 is origin0
 
     with pytest.raises(RuntimeError) as excinfo:
-        txn.origin()
+        txn.origin
 
     assert str(excinfo.value) == "No current transaction"
 
@@ -152,6 +152,9 @@ def create_new_transaction(map0: Map, key: str, val: str) -> None:
     with map0.doc.new_transaction():
         time.sleep(0.1)
         map0[key] = val
+    gc.collect()
+    # looks like PyPy needs a second one:
+    gc.collect()
 
 
 async def create_new_transaction_async(map0: Map, key: str, val: str) -> None:
@@ -163,6 +166,7 @@ async def create_new_transaction_async(map0: Map, key: str, val: str) -> None:
 async def test_new_transaction_multithreading():
     doc = Doc(allow_multithreading=True)
     doc["map0"] = map0 = Map()
+    gc.collect()
 
     def callback(events, event):
         events.append(None)
@@ -183,6 +187,7 @@ async def test_new_transaction_multithreading():
 async def test_new_transaction_no_multithreading():
     doc = Doc(allow_multithreading=False)
     doc["map0"] = map0 = Map()
+    gc.collect()
 
     def callback(events, event):
         events.append(None)
@@ -277,3 +282,21 @@ async def test_new_async_transaction_concurrent_no_multithreading():
 
     assert len(events) == 2
     assert map0.to_py() == {"key0": "val0", "key1": "val1"}
+
+
+def test_get_root_type_in_transaction():
+    doc = Doc()
+    with doc.transaction():
+        text = doc.get("text", type=Text)
+        array = doc.get("Array", type=Array)
+        map0 = doc.get("map0", type=Map)
+        frag = doc.get("xml", type=XmlFragment)
+        text += "foo"
+        array.append("bar")
+        map0["key0"] = "val0"
+        frag.children.append("baz")
+
+    assert str(text) == "foo"
+    assert array.to_py() == ["bar"]
+    assert map0.to_py() == {"key0": "val0"}
+    assert str(frag) == "baz"

@@ -1,6 +1,10 @@
 from __future__ import annotations
 
-from typing import Any, Callable, Generic, Iterable, Type, TypeVar, cast
+from functools import partial
+from typing import Any, Callable, Generic, Iterable, Literal, Type, TypeVar, Union, cast, overload
+
+from anyio import BrokenResourceError, create_memory_object_stream
+from anyio.streams.memory import MemoryObjectReceiveStream, MemoryObjectSendStream
 
 from ._base import BaseDoc, BaseType, Typed, base_types, forbid_read_transaction
 from ._pycrdt import Doc as _Doc
@@ -43,6 +47,10 @@ class Doc(BaseDoc, Generic[T]):
             self[k] = v
         if Model is not None:
             self._twin_doc = Doc(init)
+        self._send_streams: dict[
+            bool, set[MemoryObjectSendStream[TransactionEvent | SubdocsEvent]]
+        ] = {False: set(), True: set()}
+        self._event_subscription: dict[bool, Subscription] = {}
 
     @property
     def guid(self) -> int:
@@ -181,9 +189,11 @@ class Doc(BaseDoc, Generic[T]):
         """
         if not isinstance(key, str):
             raise RuntimeError("Key must be of type string")
-        integrated = value._get_or_insert(key, self)
-        prelim = value._integrate(self, integrated)
-        value._init(prelim)
+        with self.transaction() as txn:
+            forbid_read_transaction(txn)
+            integrated = value._get_or_insert(key, self)
+            prelim = value._integrate(self, integrated)
+            value._init(prelim)
 
     def __getitem__(self, key: str) -> T:
         """
@@ -294,6 +304,71 @@ class Doc(BaseDoc, Generic[T]):
         """
         self._subscriptions.remove(subscription)
         subscription.drop()
+
+    @overload
+    def events(
+        self,
+        subdocs: Literal[False],
+        max_buffer_size: float = float("inf"),
+    ) -> MemoryObjectReceiveStream[TransactionEvent]: ...
+
+    @overload
+    def events(
+        self,
+        subdocs: Literal[True],
+        max_buffer_size: float = float("inf"),
+    ) -> MemoryObjectReceiveStream[list[SubdocsEvent]]: ...
+
+    def events(
+        self,
+        subdocs: bool = False,
+        max_buffer_size: float = float("inf"),
+    ):
+        """
+        Allows to asynchronously iterate over the document events, without using a callback.
+        A buffer is used to store the events, allowing to iterate at a (temporarily) slower
+        rate than they are produced.
+
+        This method must be used with an async context manager and an async for-loop:
+
+        ```py
+        async def main():
+            async with doc.events() as events:
+                async for event in events:
+                    update: bytes = event.update
+                    ...
+        ```
+
+        Args:
+            subdocs: Whether to iterate over the [SubdocsEvent][pycrdt.SubdocsEvent] events
+                (default is [TransactionEvent][pycrdt.TransactionEvent]).
+            max_buffer_size: Maximum number of events that can be buffered.
+
+        Returns:
+            An async iterator over the document events.
+        """
+        observe = self.observe_subdocs if subdocs else self.observe
+        if not self._send_streams[subdocs]:
+            self._event_subscription[subdocs] = observe(partial(self._send_event, subdocs))
+        send_stream, receive_stream = create_memory_object_stream[
+            Union[TransactionEvent, SubdocsEvent]
+        ](max_buffer_size=max_buffer_size)
+        self._send_streams[subdocs].add(send_stream)
+        return receive_stream
+
+    def _send_event(self, subdocs: bool, event: TransactionEvent | SubdocsEvent):
+        to_remove: list[MemoryObjectSendStream[TransactionEvent | SubdocsEvent]] = []
+        send_streams = self._send_streams[subdocs]
+        for send_stream in send_streams:
+            try:
+                send_stream.send_nowait(event)
+            except BrokenResourceError:
+                to_remove.append(send_stream)
+        for send_stream in to_remove:
+            send_stream.close()
+            send_streams.remove(send_stream)
+        if not send_streams:
+            self.unobserve(self._event_subscription[subdocs])
 
 
 class TypedDoc(Typed):

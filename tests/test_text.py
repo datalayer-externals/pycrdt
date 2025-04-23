@@ -1,7 +1,11 @@
 import re
 
 import pytest
+from anyio import TASK_STATUS_IGNORED, Event, create_task_group
+from anyio.abc import TaskStatus
 from pycrdt import Array, Doc, Map, Text
+
+pytestmark = pytest.mark.anyio
 
 hello = "Hello"
 world = ", World"

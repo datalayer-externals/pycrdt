@@ -1,5 +1,36 @@
 # Version history
 
+## 0.12.15
+
+- Upgrade `pyo3` to v0.24.2.
+
+## 0.12.14
+
+- Upgrade `yrs` to v0.23.1.
+
+## 0.12.13
+
+- Add `is_awareness_disconnect_message()`.
+- Close memory streams in event iterators.
+
+## 0.12.12
+
+- Add doc and shared type `events()` async event iterator.
+- Fix deadlock while getting root type from within transaction.
+
+## 0.12.11
+
+- Upgrade `pyo3` to v0.24.1.
+
+## 0.12.10
+
+- Upgrade `yrs` to v0.23.0.
+- Pin `trio <0.30.0` in tests.
+
+## 0.12.9
+
+- Upgrade `pyo3` to v0.24.0.
+
 ## 0.12.8
 
 - Bump trio upper version to <0.29.

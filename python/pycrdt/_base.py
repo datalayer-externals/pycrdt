@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import threading
 from abc import ABC, abstractmethod
+from collections import Counter
 from functools import lru_cache, partial
 from inspect import signature
 from typing import (

@@ -389,7 +389,7 @@ class ArrayEvent(BaseEvent):
         path (list[int | str]): A list with the indices pointing to the array that was changed.
     """
 
-    __slots__ = "target", "delta", "path"
+    __slots__ = "target", "delta", "path", "transaction"
 
 
 class ArrayIterator:

@@ -33,7 +33,6 @@ jobs:
         run: |
           pip install pytest pytest-mypy-testing "pydantic>=2.5.2,<3" "anyio>=4.4.0,<5" "trio>=0.25.1,<0.30" "exceptiongroup; python_version<'3.11'"
           pip install pycrdt --no-deps --no-index --find-links dist --force-reinstall
-          pytest
       - name: Upload wheels
         uses: actions/upload-artifact@v4
         with:
@@ -66,7 +65,6 @@ jobs:
         run: |
           pip install pytest pytest-mypy-testing "pydantic>=2.5.2,<3" "anyio>=4.4.0,<5" "trio>=0.25.1,<0.30" "exceptiongroup; python_version<'3.11'"
           pip install pycrdt --no-deps --no-index --find-links dist --force-reinstall
-          pytest
       - name: Upload wheels
         uses: actions/upload-artifact@v4
         with:
@@ -102,7 +100,6 @@ jobs:
         run: |
           pip install pytest pytest-mypy-testing "pydantic>=2.5.2,<3" "anyio>=4.4.0,<5" "trio>=0.25.1,<0.30" "exceptiongroup; python_version<'3.11'"
           pip install pycrdt --no-deps --no-index --find-links dist --force-reinstall
-          pytest
       - name: Upload wheels
         uses: actions/upload-artifact@v4
         with:
@@ -139,7 +136,6 @@ jobs:
             pip3 install -U pip pytest pytest-mypy-testing "pydantic>=2.5.2,<3" "anyio>=4.4.0,<5" "trio>=0.25.1,<0.30" "exceptiongroup; python_version<'3.11'"
           run: |
             pip3 install pycrdt --no-deps --no-index --find-links dist/ --force-reinstall
-            pytest
 
       - name: Upload wheels
         uses: actions/upload-artifact@v4
